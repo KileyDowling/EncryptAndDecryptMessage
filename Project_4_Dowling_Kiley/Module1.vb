@@ -18,14 +18,13 @@ Module Module1
         Dim searchKey As Char
         Dim _foundLocation As Integer
 
-        Dim temp() As Char = {"0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c}
+        Dim temp() As Char = {"0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c, "0"c}
 
         'program controls
         Dim _option As Integer
         Dim encrypt As Integer = 1
         Dim decrypt As Integer = 2
         Dim _EXIT As Integer = 3
-
 
         Console.WriteLine(" 1. Encrypt ")
         Console.WriteLine(" 2. Decrypt ")
@@ -34,24 +33,30 @@ Module Module1
         userSelection = Console.ReadLine()
         _option = CInt(userSelection)
 
+
         While (_option <> _EXIT)
+
             Console.Write("ENTER A STRING OF TEXT: ")
             data = Console.ReadLine()
             userText = data.ToCharArray
 
+            'store size of string
+            MAX_SIZE = data.Length
+
+            'assign userinput to temp array up to max size
+            If (MAX_SIZE <= 200) Then
+                For counter = 0 To (MAX_SIZE - 1)
+                    temp(counter) = userText(counter)
+                Next
+            Else
+                Console.WriteLine("**ERROR. Too many characters entered")
+                _option = _EXIT
+            End If
+
             'enrypt
             If (_option = 1) Then
-                Console.WriteLine("Encrypting...{0}", data)
-
-                'store size of string
-                MAX_SIZE = data.Length
-
-                'assign userinput to temp array up to max size
-                If (KEY_SIZE > (MAX_SIZE - 1)) Then
-                    For loc As Integer = 0 To (MAX_SIZE - 1)
-                        temp(loc) = data(loc)
-                    Next
-                End If
+                Console.WriteLine("Encrypting...[{0}]", data)
+                Console.Write("Results: ")
 
                 For num As Integer = 0 To MAX_SIZE
                     searchKey = temp(num)
@@ -67,8 +72,33 @@ Module Module1
                 Console.WriteLine("")
             End If
 
+            'decrypt
+            If (_option = 2) Then
+                Console.WriteLine("Decrypting...[{0}]", data)
+                Console.Write("Results: ")
 
-            _option = _EXIT
+                For num As Integer = 0 To MAX_SIZE
+                    searchKey = temp(num)
+
+                    For index = 0 To KEY_SIZE
+                        If (searchKey = _encryptionKey(index)) Then
+                            _foundLocation = index
+                            Console.Write("{0}", _mappingKey(_foundLocation))
+                        End If
+                    Next
+                Next
+
+                Console.WriteLine("")
+            End If
+
+            Console.WriteLine(" 1. Encrypt ")
+            Console.WriteLine(" 2. Decrypt ")
+            Console.WriteLine(" 3. Exit ")
+
+            userSelection = Console.ReadLine()
+            _option = CInt(userSelection)
+
+
         End While
 
         Console.Write("Program end. Good-bye!")
