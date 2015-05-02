@@ -16,7 +16,9 @@ Module Module1
         userChoice = ProgramControl()
 
         While (userChoice <> _EXIT)
+            'accept user input
             userInput = acceptUserInput()
+            'check if valid
             validInput = validateUserInput(userInput)
 
             If (validInput = userInput) Then
@@ -24,6 +26,7 @@ Module Module1
                 result = EncryptOrDecrypt(validInput, userChoice)
                 Console.WriteLine("RESULT: {0}", result)
 
+                'allow user to choose to continue
                 userChoice = ProgramControl()
             Else
                 Console.WriteLine(validInput)
@@ -42,6 +45,7 @@ Module Module1
         Dim _EXIT As Integer = 3
         Dim userSelection As String = "-1"
         Dim numCheck As Boolean = False
+
         numCheck = IsNumeric(userSelection)
 
         While (numCheck)
@@ -50,11 +54,23 @@ Module Module1
             Console.WriteLine(" 3. Exit ")
 
             userSelection = Console.ReadLine()
-            _option = CInt(userSelection)
-            numCheck = False
+            If (IsNumeric(userSelection)) Then
+                If (CInt(userSelection) < 4) And (CInt(userSelection) > 0) Then
+                    _option = CInt(userSelection)
+                    numCheck = False
+                Else
+                    userSelection = "3"
+                    _option = CInt(userSelection)
+                End If
+
+            Else
+                userSelection = "3"
+                _option = CInt(userSelection)
+            End If
+
         End While
 
-        Return _option
+            Return _option
 
     End Function
 
